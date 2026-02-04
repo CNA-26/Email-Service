@@ -7,7 +7,7 @@ const router = express.Router();
 const client = new postmark.ServerClient(process.env.POSTMARK_API_KEY);
 
 // shipping notification email
-router.post("/shipping", async (req, res) => { 
+router.post("/", verifyJWT, async (req, res) => { 
     const { email, orderId, trackingNumber } = req.body;
     console.log("Received shipping notification request:", { email, orderId, trackingNumber });
     return res.status(200).json({ message: "Shipping notification email sent!", email, orderId, trackingNumber });
