@@ -1,13 +1,13 @@
 const express = require("express")
 require("dotenv").config();
 const postmark = require("postmark");
-const verifyJWT = require("../middleware/auth");
+const apiKey = require("../middleware/apiKey");
 
 const router = express.Router();
 const client = new postmark.ServerClient(process.env.POSTMARK_API_KEY);
 
 // order notification email
-router.post("/", verifyJWT, async (req, res) => { 
+router.post("/", apiKey, (req, res) => { 
     const { email, orderId, items } = req.body;
 
     if (!email || !orderId || !items) {

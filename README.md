@@ -11,3 +11,5 @@ Shipping
 
 How to use:
 Send correct POST data with valid JWT to the dedicated endpoint and a completed email template will be sent to provided adress
+
+Postmark only works with addresses of the correct domain.
