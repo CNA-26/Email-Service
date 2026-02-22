@@ -46,8 +46,8 @@ router.post("/confirm", apiKey, (req, res) => {
     const { email, name } = req.body;
 
     if (!email || !name ) {
-        console.log("Missing email, name, or link in password change request");
-        return res.status(400).json({ message: "Missing email, name, or link" });
+        console.log("Missing email, or name in password change request");
+        return res.status(400).json({ message: "Missing email or name" });
     }
     if (!email.includes("@")) {
         return res.status(400).json({ message: "Invalid email" });

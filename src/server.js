@@ -16,6 +16,8 @@ app.get("/", (req, res) => {
 
 const registerRouter = require('./routes/register');
 app.use('/register', registerRouter);
+const resetPasswordRouter = require('./routes/reset-password');
+app.use('/reset-password', resetPasswordRouter);
 
 const orderRouter = require('./routes/order');
 app.use('/order', orderRouter);
