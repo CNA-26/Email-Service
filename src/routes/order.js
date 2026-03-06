@@ -2,28 +2,51 @@ const express = require("express")
 require("dotenv").config();
 const postmark = require("postmark");
 const apiKey = require("../middleware/apiKey");
+const orderTemplate = require("../templates/orderTemplate");
 
 const router = express.Router();
 const client = new postmark.ServerClient(process.env.POSTMARK_API_KEY);
 
 // order notification email
 router.post("/", apiKey, (req, res) => { 
-    const { email, orderId, items } = req.body;
+    const { email, name, orderId, items } = req.body;
 
-    if (!email || !orderId || !items) {
-        console.log("Missing email, orderId, or items : in order request");
-        return res.status(400).json({ message: "Missing email, orderId, or item/s" });
+    if (!email || !name || !orderId || !items) {
+        console.log("Missing email, name, orderId, or items : in order request");
+        return res.status(400).json({ message: "Missing email, name, orderId, or item/s" });
     }
     if (!email.includes("@")) {
         return res.status(400).json({ message: "Invalid email" });
     }
 
-    console.log("Received order notification request:", { email, orderId, items });
+    console.log("Received order notification request:", { email, name, orderId, items });
 
-    // Email sending logic:
+    // Listing items for the html template
+    const orderDetails = items.map(item => `<li>${item.name} (x${item.quantity})</li>`).join("");
 
+    const htmlTemplate = orderTemplate({ name, orderId, orderDetails });
 
-    return res.status(200).json({ message: "Order notification email sent!", email, orderId, items });
+    //Email sending logic:
+    
+/*
+-----SENDING EMAIL WITH POSTMARK (UNCOMMENT TO ENABLE)-----
+const client = new postmark.ServerClient(process.env.POSTMARK_API_KEY);
+async function sendEmail() {
+  await client.sendEmail({
+    From: process.env.POSTMARK_FROM,
+    To: email,
+    Subject: "Test Registration Email!",
+    HtmlBody: htmlTemplate,
+    TextBody: "TESTING Registration Email!",
+    MessageStream: "broadcast",
+  });
+
+  console.log("Email sent via Postmark");
+}
+
+sendEmail().catch(console.error); */
+
+    return res.status(200).json({ message: "Order notification email sent!", email, name, orderId, items, htmlTemplate });
 });
 
 module.exports = router;
