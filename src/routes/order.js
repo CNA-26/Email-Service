@@ -22,7 +22,7 @@ router.post("/", apiKey, (req, res) => {
     console.log("Received order notification request:", { email, name, orderId, items });
 
     // Listing items for the html template
-    const orderDetails = items.map(item => `<li>${item.name} (x${item.quantity})</li>`).join("");
+    const orderDetails = items.map(item => `<li>${item.name} (x${item.quantity}) $${(item.price * item.quantity).toFixed(2)} €</li>`).join("");
 
     const htmlTemplate = orderTemplate({ name, orderId, orderDetails });
 
