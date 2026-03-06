@@ -11,7 +11,15 @@ const client = new postmark.ServerClient(process.env.POSTMARK_API_KEY);
 router.post("/", apiKey, (req, res) => { 
     const { email, name, invoiceId, amount, link } = req.body;
 
-    console.log("Received invoicing request:", { email, invoiceId, amount, link });
+    if (!email || !name || !invoiceId || !amount || !link) {
+        console.log("Missing email, name, invoiceId, amount, or link in invoicing request");
+        return res.status(400).json({ message: "Missing email, name, invoiceId, amount, or link" });
+    }
+    if (!email.includes("@")) {
+        return res.status(400).json({ message: "Invalid email" });
+    }
+
+    console.log("Received invoicing request:", { email, name, invoiceId, amount, link });
 
     const htmlTemplate = invoiceTemplate({ name, invoiceId, amount, link });
 
