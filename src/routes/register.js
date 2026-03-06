@@ -18,8 +18,9 @@ router.post("/", apiKey, (req, res) => {
     }
     console.log("Received registration request:", { email, name });
 
-    //Email sending logic:
     const htmlTemplate = registerTemplate({ name });
+    //Email sending logic:
+    
 /*
 -----SENDING EMAIL WITH POSTMARK (UNCOMMENT TO ENABLE)-----
 const client = new postmark.ServerClient(process.env.POSTMARK_API_KEY);
