@@ -14,8 +14,8 @@ router.post("/", apiKey, (req, res) => {
         console.log("Missing email, name, or link in password change request");
         return res.status(400).json({ message: "Missing email, name, or link" });
     }
-    if (!email.includes("@")) {
-        return res.status(400).json({ message: "Invalid email" });
+    if (!email.includes("@arcada.fi")) {
+        return res.status(400).json({ message: "Invalid email address, needs to be to @arcada.fi" });
     }
 
     console.log("Received password change request:", { email, name, link });
@@ -23,7 +23,7 @@ router.post("/", apiKey, (req, res) => {
     const htmlTemplate = resetPasswordTemplate({ name, link });
 
     //Email sending logic :
- /*
+//-----SENDING EMAIL WITH POSTMARK (UNCOMMENT TO ENABLE)-----
 const client = new postmark.ServerClient(process.env.POSTMARK_API_KEY);
 async function sendEmail() {
   await client.sendEmail({
@@ -31,14 +31,14 @@ async function sendEmail() {
     To: email,
     Subject: "Reset password link for Monstera",
     HtmlBody: htmlTemplate,
-    TextBody: "Reset password link for Monstera",
+    TextBody: "Reset password",
     MessageStream: "broadcast",
   });
 
   console.log("Email sent via Postmark");
 }
 
-sendEmail().catch(console.error);  */
+sendEmail().catch(console.error);
 
     return res.status(200).json({ message: "Password reset email sent!", email, name, link, htmlTemplate });
 })
@@ -50,8 +50,8 @@ router.post("/confirm", apiKey, (req, res) => {
         console.log("Missing email, name, or new password in password change request");
         return res.status(400).json({ message: "Missing email, name, or new password" });
     }
-    if (!email.includes("@")) {
-        return res.status(400).json({ message: "Invalid email" });
+    if (!email.includes("@arcada.fi")) {
+        return res.status(400).json({ message: "Invalid email address, needs to be to @arcada.fi" });
     }
 
     console.log("Received password change request:", { email, name, newPassword });
@@ -59,7 +59,8 @@ router.post("/confirm", apiKey, (req, res) => {
     const htmlTemplate = resetPasswordConfirmationTemplate({ name, newPassword });
 
     //Email sending logic:
- /*
+ //-----SENDING EMAIL WITH POSTMARK (UNCOMMENT TO ENABLE)-----
+ 
 const client = new postmark.ServerClient(process.env.POSTMARK_API_KEY);
 async function sendEmail() {
   await client.sendEmail({
@@ -74,7 +75,7 @@ async function sendEmail() {
   console.log("Email sent via Postmark");
 } 
 
-sendEmail().catch(console.error); */
+sendEmail().catch(console.error);
 
     return res.status(200).json({ message: "Password reset confirmed email sent!", email, name, newPassword, htmlTemplate });
 })

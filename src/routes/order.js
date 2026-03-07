@@ -15,8 +15,8 @@ router.post("/", apiKey, (req, res) => {
         console.log("Missing email, name, orderId, or items : in order request");
         return res.status(400).json({ message: "Missing email, name, orderId, or item/s" });
     }
-    if (!email.includes("@")) {
-        return res.status(400).json({ message: "Invalid email" });
+    if (!email.includes("@arcada.fi")) {
+        return res.status(400).json({ message: "Invalid email address, needs to be to @arcada.fi" });
     }
 
     console.log("Received order notification request:", { email, name, orderId, items });
@@ -27,24 +27,23 @@ router.post("/", apiKey, (req, res) => {
     const htmlTemplate = orderTemplate({ name, orderId, orderDetails });
 
     //Email sending logic:
-    
-/*
------SENDING EMAIL WITH POSTMARK (UNCOMMENT TO ENABLE)-----
+//-----SENDING EMAIL WITH POSTMARK (UNCOMMENT TO ENABLE)-----
+
 const client = new postmark.ServerClient(process.env.POSTMARK_API_KEY);
 async function sendEmail() {
   await client.sendEmail({
     From: process.env.POSTMARK_FROM,
     To: email,
-    Subject: "Test Registration Email!",
+    Subject: "Order Notification from Monstera",
     HtmlBody: htmlTemplate,
-    TextBody: "TESTING Registration Email!",
+    TextBody: "You have a new order!",
     MessageStream: "broadcast",
   });
 
   console.log("Email sent via Postmark");
 }
 
-sendEmail().catch(console.error); */
+sendEmail().catch(console.error); 
 
     return res.status(200).json({ message: "Order notification email sent!", email, name, orderId, items, htmlTemplate });
 });

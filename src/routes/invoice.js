@@ -15,7 +15,7 @@ router.post("/", apiKey, (req, res) => {
         console.log("Missing email, name, invoiceId, amount, or link in invoicing request");
         return res.status(400).json({ message: "Missing email, name, invoiceId, amount, or link" });
     }
-    if (!email.includes("@")) {
+    if (!email.includes("@arcada.fi")) {
         return res.status(400).json({ message: "Invalid email" });
     }
 
@@ -24,9 +24,8 @@ router.post("/", apiKey, (req, res) => {
     const htmlTemplate = invoiceTemplate({ name, invoiceId, amount, link });
 
     // Email sending logic:
+//-----SENDING EMAIL WITH POSTMARK (UNCOMMENT TO ENABLE)-----
 
-    /*
------SENDING EMAIL WITH POSTMARK (UNCOMMENT TO ENABLE)-----
 const client = new postmark.ServerClient(process.env.POSTMARK_API_KEY);
 async function sendEmail() {
   await client.sendEmail({
@@ -34,14 +33,14 @@ async function sendEmail() {
     To: email,
     Subject: "Invoice from Monstera",
     HtmlBody: htmlTemplate,
-    TextBody: "new invoice from Monstera",
+    TextBody: "New invoice from Monstera",
     MessageStream: "broadcast",
   });
 
   console.log("Email sent via Postmark");
 }
 
-sendEmail().catch(console.error); */
+sendEmail().catch(console.error); 
 
     return res.status(200).json({ message: "Invoicing email sent!", email, invoiceId, amount, link, htmlTemplate });
 });
